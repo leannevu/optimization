@@ -1,4 +1,4 @@
-const textColorFiles = ['/static/red.txt', '/static/green.txt', '/static/blue.txt', '/static/purple.txt'];
+const textColorFiles = ['/static/analysis-productivity/red.txt', '/static/analysis-productivity/green.txt', '/static/analysis-productivity/blue.txt', '/analysis-productivity/purple.txt'];
 read_code_text();
 parts = []; //array for code text file, later used to display code from Jupter notebook
 
@@ -8,7 +8,7 @@ async function read_code_text() {
     combinedRegex = regexDifferentOrders[0];
     alterRegexGreen = regexDifferentOrders[1];
 
-    fetch('/static/code.txt')
+    fetch('/static/analysis-productivity/code.txt')
         .then(response => response.text())
         .then(text => {
             // Split on the custom separator ===

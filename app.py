@@ -8,6 +8,7 @@ import optimization as op
 import io
 import base64
 import matplotlib.pyplot as plt
+import seaborn as sns
 
 app = Flask(__name__)
 
@@ -40,10 +41,10 @@ def get_random_portfolio():
 ## eda project routes
 ## optimization project routes
 @app.route('/analysis-productivity')
-def optimization():
+def analysis_productivity():
     return render_template('analysis-productivity/index.html')
 
-#Saves uploaded file into directory and return list of column names
+#Saves uploaded file into directory and return list of column names ## this function is for bet stats ..
 @app.route('/upload', methods=['POST'])
 def upload_file():
     if 'file' not in request.files:
@@ -53,9 +54,9 @@ def upload_file():
     if file.filename == '':
         return jsonify({'error': 'No selected File'})
     
-    file_path = os.path.join(UPLOAD_FOLDER, file.filename)
+    file_path = os.path.join('static', file.filename)
     file.save(file_path)
-    session['file_path'] = file_path # saves file_path in session to use among other functions
+    #session['file_path'] = file_path # saves file_path in session to use among other functions
     #Use session.get('file_path'), where the string passed between [] above is passed into the session.get function, to get the file_path string set
 
     try:
@@ -69,7 +70,7 @@ def upload_file():
 @app.route('/print_csv_headers')
 def print_csv_headers():
     try:
-        file_path = os.path.join(os.path.dirname(__file__), 'uploads', 'social_media_vs_productivity.csv')
+        file_path = os.path.join(os.path.dirname(__file__), 'static', 'analysis-productivity', 'social_media_vs_productivity.csv')
         df = pd.read_csv(file_path, sep=',', quotechar='"') 
         columns = df.columns.tolist()
         dtypes = df.dtypes.apply(lambda x: x.name).to_dict()
@@ -81,7 +82,7 @@ def print_csv_headers():
 @app.route('/print_filtered_csv')
 def print_filtered_csv():
     try:
-        file_path = os.path.join(os.path.dirname(__file__), 'uploads', 'social_media_vs_productivity.csv')
+        file_path = os.path.join(os.path.dirname(__file__), 'static', 'analysis-productivity', 'social_media_vs_productivity.csv')
         df = pd.read_csv(file_path, sep=',', quotechar='"')
         # Replace NaN or Infinite with None
         df = df.replace([np.nan, np.inf, -np.inf], None)
@@ -97,7 +98,7 @@ def print_filtered_csv():
 @app.route('/section_0')
 def section_0():
     try:
-        file_path = os.path.join(os.path.dirname(__file__), 'uploads', 'social_media_vs_productivity.csv')
+        file_path = os.path.join(os.path.dirname(__file__), 'static', 'analysis-productivity', 'social_media_vs_productivity.csv')
         df = pd.read_csv(file_path, sep=',', quotechar='"') 
         buffer = io.StringIO()
         df.info(buf=buffer)
@@ -110,7 +111,7 @@ def section_0():
 @app.route('/section_1')
 def section_1():
     try:
-        file_path = os.path.join(os.path.dirname(__file__), 'uploads', 'social_media_vs_productivity.csv')
+        file_path = os.path.join(os.path.dirname(__file__), 'static', 'analysis-productivity', 'social_media_vs_productivity.csv')
         df = pd.read_csv(file_path, sep=',', quotechar='"') 
         #Check correlations between attributes
         df_corr = df.corr(numeric_only=True)
@@ -133,7 +134,7 @@ def section_1():
 @app.route('/section_2')
 def section_2():
     try:
-        file_path = os.path.join(os.path.dirname(__file__), 'uploads', 'social_media_vs_productivity.csv')
+        file_path = os.path.join(os.path.dirname(__file__), 'static', 'analysis-productivity', 'social_media_vs_productivity.csv')
         df = pd.read_csv(file_path, sep=',', quotechar='"') 
         result = df.dtypes #Returns new DF, but does not print to console (for .describe())
         output = df.dtypes.apply(lambda x: x.name).to_dict()
@@ -144,7 +145,7 @@ def section_2():
 @app.route('/section_3')
 def section_3():
     try:
-        file_path = os.path.join(os.path.dirname(__file__), 'uploads', 'social_media_vs_productivity.csv')
+        file_path = os.path.join(os.path.dirname(__file__), 'static', 'analysis-productivity', 'social_media_vs_productivity.csv')
         df = pd.read_csv(file_path, sep=',', quotechar='"') 
         #dfjs = df_job_satifaction_social_media, check correlations between social media and job satisfaction
         dfjs = df.iloc[:, [3, 8, 10, 11, 14, 17, 18]]
@@ -163,7 +164,7 @@ def section_3():
 @app.route('/section_4')
 def section_4():
     try:
-        file_path = os.path.join(os.path.dirname(__file__), 'uploads', 'social_media_vs_productivity.csv')
+        file_path = os.path.join(os.path.dirname(__file__), 'static', 'analysis-productivity', 'social_media_vs_productivity.csv')
         df = pd.read_csv(file_path, sep=',', quotechar='"') 
 
         dfjs = df.iloc[:, [3, 8, 10, 11, 14, 17, 18]]
@@ -192,7 +193,7 @@ def section_4():
 @app.route('/section_5')
 def section_5():
     try:
-        file_path = os.path.join(os.path.dirname(__file__), 'uploads', 'social_media_vs_productivity.csv')
+        file_path = os.path.join(os.path.dirname(__file__), 'static', 'analysis-productivity', 'social_media_vs_productivity.csv')
         df = pd.read_csv(file_path, sep=',', quotechar='"') 
         result = df.groupby('age')[['daily_social_media_time', 'actual_productivity_score', 'screen_time_before_sleep']].agg('mean')
         result = result.reset_index()
@@ -204,7 +205,7 @@ def section_5():
 @app.route('/section_6')
 def section_6():
     try:
-        file_path = os.path.join(os.path.dirname(__file__), 'uploads', 'social_media_vs_productivity.csv')
+        file_path = os.path.join(os.path.dirname(__file__), 'static', 'analysis-productivity', 'social_media_vs_productivity.csv')
         df = pd.read_csv(file_path, sep=',', quotechar='"') 
         # Try grouping with age bins to point differences
         bins = [0, 30, 40, 50, 60, 100]
@@ -224,7 +225,7 @@ def section_6():
 @app.route('/section_7')
 def section_7():
     try:
-        file_path = os.path.join(os.path.dirname(__file__), 'uploads', 'social_media_vs_productivity.csv')
+        file_path = os.path.join(os.path.dirname(__file__), 'static', 'analysis-productivity', 'social_media_vs_productivity.csv')
         df = pd.read_csv(file_path, sep=',', quotechar='"') 
 
         #See distribution of screen time before sleep
@@ -253,7 +254,7 @@ def section_7():
 @app.route('/section_8')
 def section_8():
     try:
-        file_path = os.path.join(os.path.dirname(__file__), 'uploads', 'social_media_vs_productivity.csv')
+        file_path = os.path.join(os.path.dirname(__file__), 'static', 'analysis-productivity', 'social_media_vs_productivity.csv')
         df = pd.read_csv(file_path, sep=',', quotechar='"') 
 
 
@@ -288,7 +289,7 @@ def section_8():
 @app.route('/section_9')
 def section_9():
     try:
-        file_path = os.path.join(os.path.dirname(__file__), 'uploads', 'social_media_vs_productivity.csv')
+        file_path = os.path.join(os.path.dirname(__file__), 'static', 'analysis-productivity', 'social_media_vs_productivity.csv')
         df = pd.read_csv(file_path, sep=',', quotechar='"') 
 
         screen_bins = [0, 1, 2, 3, 5]
@@ -325,7 +326,7 @@ def section_9():
 @app.route('/section_10')
 def section_10():
     try:
-        file_path = os.path.join(os.path.dirname(__file__), 'uploads', 'social_media_vs_productivity.csv')
+        file_path = os.path.join(os.path.dirname(__file__), 'static', 'analysis-productivity', 'social_media_vs_productivity.csv')
         df = pd.read_csv(file_path, sep=',', quotechar='"') 
 
         age_range = [0, 18, 30, 50, 70]
@@ -360,7 +361,7 @@ def section_10():
 @app.route('/section_11')
 def section_11():
     try:
-        file_path = os.path.join(os.path.dirname(__file__), 'uploads', 'social_media_vs_productivity.csv')
+        file_path = os.path.join(os.path.dirname(__file__), 'static', 'analysis-productivity', 'social_media_vs_productivity.csv')
         df = pd.read_csv(file_path, sep=',', quotechar='"') 
 
         age_range = [0, 18, 30, 50, 70]
@@ -400,7 +401,7 @@ def section_11():
 @app.route('/section_12')
 def section_12():
     try:
-        file_path = os.path.join(os.path.dirname(__file__), 'uploads', 'social_media_vs_productivity.csv')
+        file_path = os.path.join(os.path.dirname(__file__), 'static', 'analysis-productivity', 'social_media_vs_productivity.csv')
         df = pd.read_csv(file_path, sep=',', quotechar='"') 
         #Bin age into ranges
         age_range = [0, 18, 30, 50, 70]
@@ -420,7 +421,7 @@ def section_12():
 @app.route('/section_13')
 def section_13():
     try:
-        file_path = os.path.join(os.path.dirname(__file__), 'uploads', 'social_media_vs_productivity.csv')
+        file_path = os.path.join(os.path.dirname(__file__), 'static', 'analysis-productivity', 'social_media_vs_productivity.csv')
         df = pd.read_csv(file_path, sep=',', quotechar='"') 
         #Bin age into ranges
         age_range = [0, 18, 30, 50, 70]
