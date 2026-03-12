@@ -8,6 +8,16 @@ import optimization as op
 import io
 import base64
 import matplotlib.pyplot as plt
+import numpy as np
+import matplotlib
+matplotlib.use('Agg')   # use non-GUI backend
+import matplotlib.pyplot as plt
+import pandas as pd
+import scipy.optimize as spo
+import os
+import random
+import io
+import base64
 
 
 app = Flask(__name__)
