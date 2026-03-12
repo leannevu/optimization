@@ -1,0 +1,68 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Optomized Portfolio Tool</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='stylesheet.css') }}">
+</head>
+<body>
+    <div id="header">
+        <h1 id="special-header">Optomized Portfolio Tool</h1>
+    </div>
+    <div id='body'>
+        <div id="image_output"></div>
+        <button id="action-button" onclick="getRandomPortfolio()">click for your stock portfolio!</button>
+        <h2 id="result_output"></h2>
+    </div>
+    <script>
+        function getRandomPortfolio() {
+            fetch('/get_random_portfolio')
+            .then(response => response.json())
+            .then(data => {
+            //get output data
+                //const output = document.getElementById('id-output');
+                //output.innerHTML = `<img src= "${data}" style="max-width: 50%; height: auto; border-radius: 8px;" />`;
+                //const output = document.getElementById('erm')
+                //#output.innerHTML = `Allocations: ${str(data.allocs)}\nComputations: ${str(data.computations)}\nSymbols: ${str(symbols)}`
+                
+                table_output = '<table><tr><th class=table-label>Stock</th>'
+
+                data.symbols.forEach(sym => {
+                    table_output += `<th class='table-rest'>${sym}</th>`
+                })
+
+                table_output += '</tr><tr><td class=table-label>Optimized Allocation</td>'
+                data.allocs.forEach(alloc => {
+                    table_output += `<td class='table-rest'>${alloc}</td>`
+                })
+
+                table_output += '</tr></table>'
+                
+                measurements = ['Cumulative Return', 'Average Daily Return', 'Standard Deviation Daily Return', 'Sharpe Ratio']
+                table_output_results = '<table><tr><th class=table-label>Measurement</th>'
+                measurements.forEach(sym => {
+                    table_output_results += `<th class='table-rest'>${sym}</th>`
+                })
+                table_output_results += '</tr><tr><td class=table-label>Results</td>'
+                data.computations.forEach(result => {
+                    table_output_results += `<td class=table-rest>${result}</td>`
+                })
+
+                table_output_results += '</tr></table>'
+
+                // Turn on (add class)
+                header_id = document.getElementById('special-header')
+                header_id.classList.add('header-highlight');
+
+                // Edit button
+                button = document.getElementById('action-button')
+                button.textContent = 'Randomize again!'
+
+                const result_output = document.getElementById('result_output')
+                result_output.innerHTML = table_output + table_output_results
+                const image_output = document.getElementById('image_output')
+                image_output.innerHTML = `<img src= "${data.image}" style="max-width: 100%; height: auto; border-radius:12px;" />`
+            })
+        }
+    </script>
+</body>
+</html>
