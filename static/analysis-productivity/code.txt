@@ -1,0 +1,101 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+import numpy as np
+df = pd.read_csv('social_media_vs_productivity.csv')
+df.info()
+===
+df_corr = df.corr(numeric_only=True)
+df_corr = df_corr.unstack()
+high_corr = df_corr[(df_corr > 0.5) & (df_corr < 1)]  # exclude 1 (self-correlation)
+high_corr = high_corr.sort_values(ascending=False)
+high_corr.drop_duplicates(inplace=True)
+high_corr.rename('top_correlations')
+===
+df.dtypes
+===
+dfjs = df.iloc[:, [3, 8, 10, 11, 14, 17, 18]]
+dfjs_corr = dfjs.corr()
+dfjs_corr_unstacked = dfjs_corr.unstack()
+dfjs_corr_unstacked = dfjs_corr_unstacked[(dfjs_corr_unstacked < 1)].sort_values(ascending=False)
+dfjs_corr_unstacked.drop_duplicates(inplace=True)
+dfjs_corr_unstacked.rename('more_correlations')
+===
+corr_matrix = dfjs_corr
+mask = np.triu(np.ones_like(corr_matrix, dtype=bool))
+plt.figure(figsize=(10, 8))
+sns.heatmap(corr_matrix, mask=mask, annot=True, cmap='coolwarm', linewidths=0.5)
+plt.title('Correlation Heatmap')
+plt.show()
+===
+df.groupby('age')[['daily_social_media_time', 'actual_productivity_score', 'screen_time_before_sleep']].agg('mean')
+===
+bins = [0, 30, 40, 50, 60, 100]
+labels = ['<30', '31-40', '41-50', '51-60', '60+']
+df['age_group'] = pd.cut(df['age'], bins=bins, labels=labels, right=True)
+df.groupby('age_group')[['daily_social_media_time', 'actual_productivity_score', 'screen_time_before_sleep']].agg(['mean', 'median'])
+===
+plt.hist(df['screen_time_before_sleep'], bins=10, edgecolor='black')
+plt.title('Distribution of Screen Time Before Sleep')
+plt.xlabel('Hours')
+plt.ylabel('Frequency')
+plt.show()
+===
+bins = [0, 18, 30, 40, 50, 60, 100]
+labels = ['<18', '18-30', '31-40', '41-50', '51-60', '60+']
+df['age_group'] = pd.cut(df['age'], bins=bins, labels=labels, right=True)
+df.groupby('age_group')['screen_time_before_sleep'].mean().plot(kind='bar')
+plt.title('Avg Screen Time Before Sleep by Age Group')
+plt.ylabel('Hours')
+plt.xlabel('Age Group')
+plt.show()
+sns.boxplot(x='age_group', y='screen_time_before_sleep', data=df)
+plt.title('Screen Time Distribution by Age Group')
+plt.show()
+===
+screen_bins = [0, 1, 2, 3, 5]
+screen_labels = ['<1', '1-2', '2-3', '3-5']
+df['screen_group'] = pd.cut(df['screen_time_before_sleep'], bins=screen_bins, labels=screen_labels, right=True)
+age_bins = [0, 20, 30, 40, 100]
+age_labels = ['<20', '21-30', '31-40', '40+']
+df['age_group'] = pd.cut(df['age'], bins=age_bins, labels=age_labels)
+cross_tab = df.groupby(['age_group', 'screen_group']).size().unstack()
+print(cross_tab)
+plt.figure(figsize=(8,6))
+sns.heatmap(cross_tab, annot=True, fmt='d', cmap='YlGnBu')
+plt.title('Screen Time Before Sleep Across Age Groups')
+plt.ylabel('Age Group')
+plt.xlabel('Screen Time Group')
+plt.show()
+===
+age_range = [0, 18, 30, 50, 70]
+age_range_labels = ['0-18', '18-30', '30-50', '50-70']
+df['age_range'] = pd.cut(df['age'], bins=age_range, labels=age_range_labels)
+
+actual_productivity_range = [0, 2, 4, 6, 8, 10]
+actual_productivity_range_labels = ['0-2', '2-4', '4-6', '6-8', '8-10']
+df['actual_productivity_range'] = pd.cut(df['actual_productivity_score'], bins=actual_productivity_range, labels=actual_productivity_range_labels)
+
+df_ct_demographic_productivity = df.groupby(['gender', 'age_range', 'actual_productivity_range']).size().unstack('actual_productivity_range')
+
+plt.figure(figsize=(8,6))
+sns.heatmap(df_ct_demographic_productivity, annot=True, fmt='d', cmap='YlGnBu')
+plt.title('Productivity across age groups')
+plt.ylabel('Age Group/Gender')
+plt.xlabel('Productivity')
+plt.show()
+===
+df_ct_demographic_productivity_percentage_per_group = df_ct_demographic_productivity.div(df_ct_demographic_productivity.sum(axis=1), axis=0)
+df_ct_demographic_productivity_percentage_per_group_formatted = df_ct_demographic_productivity_percentage_per_group.applymap(lambda x: f"{x*100:.2f}%")
+
+plt.figure(figsize=(8,6))
+sns.heatmap(df_ct_demographic_productivity_percentage_per_group, annot=True, fmt='.1%', cmap='YlGnBu')
+plt.title('Productivity across age groups')
+plt.ylabel('Age Group/Gender')
+plt.xlabel('Productivity')
+plt.show()
+===
+result = df.groupby(['age_range', 'gender'])['actual_productivity_score'].median().unstack()
+result = result.reset_index().fillna('')
+===
+result = df.groupby(['age_range', 'gender']).size().unstack().reset_index()

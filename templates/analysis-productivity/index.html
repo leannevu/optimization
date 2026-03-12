@@ -1,0 +1,150 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Social Media vs Productivity</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='analysis-productivity/stylesheet.css') }}">
+</head>
+<body>
+    <h1>EDA Interactivity Dashboard: Social Media vs Productivity</h1>
+    <p id="guide">Check the analysis out- each section has a 'See Code' and 'See Result' button that you can choose to<br>display individually. Click on the '- >' button displayed on the right of the screen to chronically display<br>each section, one by one.<br><br></p>
+    <a href="https://leannevu.github.io/blog-insight-productivity.html" class="button" target="_blank">View Full Insights Journal</a>
+    <section id="next-button">
+        <button onclick="nextButton()">-- ></button>
+        <p><p>
+    </section>
+    <section id=0>
+        <p>#Setting the journal up - imports, turning the dataset into a dataframe, and brief overview on the dataset</p>
+        <button onclick="printCode(0)">See Code</button>
+        <button onclick="getResult(0)">See Result</button>
+        <div id="output_code_0"></div>
+        <div id="line0"></div>
+        <div id="output_result_0"></div>
+    </section>
+    <section id="1">
+        <p>#Check correlations between attributes; unstack, filter and sort highest correlations, and drop duplicates</p>
+        <button onclick="printCode(1)">See Code</button>
+        <button onclick="getResult(1)">See Result</button>
+        <div id="output_code_1"></div>
+        <div id="line1"></div>
+        <div id="output_result_1"></div>
+    </section>
+     <section id="2">
+        <p id="smaller">#From previous correlations, we learned that job satifaction is strongly linked to productivity score
+            <br>#See what attributes have numeric values to find more correlations linked to job satisfaction and productivity</p>
+        <button onclick="printCode(2)">See Code</button>
+        <button onclick="getResult(2)">See Result</button>
+        <div id="output_code_2"></div>
+        <div id="line2"></div>
+        <div id="output_result_2"></div>
+    </section>
+     <section id="3">
+        <p>#dfjs = df_job_satifaction_social_media; find high correlations with job satisfaction or productivity (not between each other) for more general insight</p>
+        <button onclick="printCode(3)">See Code</button>
+        <button onclick="getResult(3)">See Result</button>
+        <div id="output_code_3"></div>
+        <div id="line3"></div>
+        <div id="output_result_3"></div>
+    </section>
+     <section id="4">
+        <p>#Create correlation matrix & visualize if what I am seeing (low correlations between variables) is true
+            <br>#Create mask for the upper triangle to use when ploting heatmap- remove unnecessary visual duplicates
+        </p>
+        <button onclick="printCode(4)">See Code</button>
+        <button onclick="getResult(4)">See Result</button>
+        <div id="output_code_4"></div>
+        <div id="line4"></div>
+        <div id="output_result_4"></div>
+    </section>
+     <section id="5">
+        <p>#Try grouping by age to find if there is a possible correlation between the mean of social media use,
+            <br> productivity, and screen time before sleep between age groups</p>
+        <button onclick="printCode(5)">See Code</button>
+        <button onclick="getResult(5)">See Result</button>
+        <div id="output_code_5"></div>
+        <div id="line5"></div>
+        <div id="output_result_5"></div>
+    </section>
+     <section id="6">
+        <p>#Grouping with age bins for further analysis and reassurance
+            <br>#Aggregate mean and median of selected columns, grouped with age bins
+        </p>
+        <button onclick="printCode(6)">See Code</button>
+        <button onclick="getResult(6)">See Result</button>
+        <div id="output_code_6"></div>
+        <div id="line6"></div>
+        <div id="output_result_6"></div>
+    </section>
+     <section id="7">
+        <p>#See distribution of screen time before sleep among all particpants</p>
+        <button onclick="printCode(7)">See Code</button>
+        <button onclick="getResult(7)">See Result</button>
+        <div id="output_code_7"></div>
+        <div id="line7"></div>
+        <div id="output_result_7"></div>
+    </section>
+     <section id="8">
+        <p>#Compare Screen Time mean for each age range; does one group significantly
+            <br>make up the frequency in a certain range of screen time?
+            <br>#Boxplot to show spread + outliers
+        </p>
+        <button onclick="printCode(8)">See Code</button>
+        <button onclick="getResult(8)">See Result</button>
+        <div id="output_code_8"></div>
+        <div id="line8"></div>
+        <div id="output_result_8"></div>
+    </section>
+     <section id="9">
+        <p>#See the frequency for each combination of screen time range and age group; create age and screen time bins
+            <br>and use groupby and size() to count combinations // also can use .crosstab
+            <br>heatmap visualization of results
+        </p>
+        <button onclick="printCode(9)">See Code</button>
+        <button onclick="getResult(9)">See Result</button>
+        <div id="output_code_9"></div>
+        <div id="line9"></div>
+        <div id="output_result_9"></div>
+    </section>
+         <section id="10">
+        <p>#Same idea as last section, but group by age range, gender, and productivity: frequency for each combination
+            <br>Bin age and productivitity into ranges, cross tab, and unstack/heatmap for visualization of results
+        </p>
+        <button onclick="printCode(10)">See Code</button>
+        <button onclick="getResult(10)">See Result</button>
+        <div id="output_code_10"></div>
+        <div id="line10"></div>
+        <div id="output_result_10"></div>
+    </section>
+         <section id="11">
+        <p>#How specific can we get with our analysis? Count percentages of frequency for each age/gender group, using last section's dataframe
+            <br>#Use groupby and div to count percentage of each group // also can use .crosstab:
+            <br>#Format and display data with %
+            <br>#Heatmap
+        </p>
+        <button onclick="printCode(11)">See Code</button>
+        <button onclick="getResult(11)">See Result</button>
+        <div id="output_code_11"></div>
+        <div id="line11"></div>
+        <div id="output_result_11"></div>
+    </section>
+    <section id="12">
+        <p>#Does gender have an impact on the results we've seen so far? Group by age range and gender and measure the median
+            <br>in actual_productivity_score
+        </p>
+        <button onclick="printCode(12)">See Code</button>
+        <button onclick="getResult(12)">See Result</button>
+        <div id="output_code_12"></div>
+        <div id="line12"></div>
+        <div id="output_result_12"></div>
+    </section>
+    <section id="13">
+        <p>#Count size of each gender and age range group to see data credibility</p>
+        <button onclick="printCode(13)">See Code</button>
+        <button onclick="getResult(13)">See Result</button>
+        <div id="output_code_13"></div>
+        <div id="line13"></div>
+        <div id="output_result_13"></div>
+    </section>
+    <script src="{{ url_for('static', filename='analysis-productivity/index.js')}}"></script>
+
+</body>
+</html>

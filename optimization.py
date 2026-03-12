@@ -22,7 +22,7 @@ class Optimize():
             rand_num = random.randint(1,1003) # use the random library
             list_rand.append(rand_num) # combine random numbers
 
-        file_path = os.path.join(os.path.dirname(__file__), 'static', 'stock_names.csv') # get file path
+        file_path = os.path.join(os.path.dirname(__file__), 'static', 'optimization','stock_names.csv') # get file path
         stock_names = pd.read_csv(file_path, header=None) # read stock file
         df_to_series = stock_names.iloc[list_rand,0] # filter stock file to 5 random rows
         return df_to_series # return 5 random stock names
@@ -36,7 +36,7 @@ class Optimize():
         return idx
 
     def symbol_to_path(self, symbol, dir='data'):
-        file_path = os.path.join(os.path.dirname(__file__), 'static', dir, f'{symbol}')
+        file_path = os.path.join(os.path.dirname(__file__), 'static', 'optimization', dir, f'{symbol}')
         return file_path
     
     def getRandomPortfolio(self, symbols, dates):
