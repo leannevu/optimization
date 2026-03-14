@@ -1,67 +1,194 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Optomized Portfolio Tool</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Optimized Portfolio Tool</title>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='optimization/stylesheet.css') }}">
 </head>
 <body>
-    <div id="header">
-        <h1 id="special-header">Optomized Portfolio Tool</h1>
-    </div>
-    <div id='body'>
-        <div id="image_output"></div>
-        <button id="action-button" onclick="getRandomPortfolio()">click for your stock portfolio!</button>
-        <h2 id="result_output"></h2>
-    </div>
+
+    <header class="site-header">
+        <div class="header-inner page-shell">
+            <a class="brand" href="https://leannevu.github.io/index.html">
+                <img class="avatar" src="{{ url_for('static', filename='scrum/leanne-vu.jpg') }}" alt="Leanne Vu">
+                <div>
+                    <div class="brand-name">Leanne Vu</div>
+                    <div class="brand-tagline">
+                        Writing about data, product, and building practical analytics.
+                    </div>
+                </div>
+            </a>
+
+            <nav class="top-nav">
+                <a href="https://leannevu.github.io/index.html">Portfolio</a>
+                <a href="#about">About</a>
+                <a href="#use-cases">Use Cases</a>
+                <a href="#tech-stack">Tech Stack</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="page-shell">
+
+        <section class="hero">
+            <p class="eyebrow">Portfolio Demo</p>
+            <h1 id="special-header">Optimized Portfolio Tool</h1>
+            <p class="hero-text">
+                A lightweight portfolio optimization demo that generates stock allocations and performance metrics,
+                then visualizes the resulting portfolio for a more interactive financial analysis experience.
+            </p>
+        </section>
+
+        <section class="app-shell">
+            <div class="app-topbar">
+                <div class="window-dots">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                <div class="app-title">Portfolio Optimization Console</div>
+            </div>
+
+            <section id="body" class="tool-layout">
+                <div class="tool-controls">
+                    <p class="console-label">Interactive Demo</p>
+                    <h2>Generate an optimized portfolio</h2>
+                    <p class="console-copy">
+                        Click the button to generate a randomized portfolio allocation and view both the chart
+                        and the portfolio performance summary.
+                    </p>
+
+                    <button id="action-button" onclick="getRandomPortfolio()">
+                        Click for your stock portfolio
+                    </button>
+                </div>
+
+                <div class="tool-output">
+                    <div id="image_output" class="output-panel output-image"></div>
+                    <div id="result_output" class="output-panel output-table"></div>
+                </div>
+            </section>
+        </section>
+
+        <section class="content-sections">
+            <section class="about-panel page-section" id="about">
+                <p class="section-label">About This Project</p>
+                <h2>Why I built this</h2>
+                <p>
+                    I built this project to strengthen my understanding of portfolio optimization while exploring
+                    how quantitative analysis can be turned into a more user-friendly interactive tool. Rather than
+                    keeping the work inside a notebook, I wanted to make the results easier to explore through a
+                    simple web interface.
+                </p>
+                <p>
+                    The project combines financial modeling concepts with product thinking by translating analytical
+                    outputs into a clearer workflow: generate, interpret, and visualize an optimized portfolio in one place.
+                </p>
+            </section>
+
+            <section class="page-section" id="use-cases">
+                <p class="section-label">Use Cases</p>
+                <h2 class="section-heading">What the experience supports</h2>
+
+                <div class="info-card-grid">
+                    <article class="info-card">
+                        <h3>Interactive Optimization</h3>
+                        <p class="card-role">Exploration</p>
+                        <p>Generate portfolio allocations dynamically instead of reading static model output.</p>
+                    </article>
+
+                    <article class="info-card">
+                        <h3>Metric Visibility</h3>
+                        <p class="card-role">Interpretation</p>
+                        <p>Review return, volatility, and Sharpe ratio together in one summarized interface.</p>
+                    </article>
+
+                    <article class="info-card">
+                        <h3>Visualization Support</h3>
+                        <p class="card-role">Analysis</p>
+                        <p>Pair allocation tables with chart output to make the portfolio easier to understand at a glance.</p>
+                    </article>
+
+                    <article class="info-card">
+                        <h3>Quant-to-Product Translation</h3>
+                        <p class="card-role">Product Thinking</p>
+                        <p>Turn a computational finance workflow into a lightweight user-facing analytics tool.</p>
+                    </article>
+                </div>
+            </section>
+
+            <section class="page-section" id="tech-stack">
+                <p class="section-label">Tech Stack</p>
+                <h2 class="section-heading">Built with</h2>
+
+                <div class="stack-list">
+                    <span>Python</span>
+                    <span>Flask</span>
+                    <span>Pandas</span>
+                    <span>Optimization logic</span>
+                    <span>HTML</span>
+                    <span>CSS</span>
+                    <span>JavaScript</span>
+                </div>
+            </section>
+        </section>
+
+    </main>
+
     <script>
         function getRandomPortfolio() {
             fetch('/get_random_portfolio')
-            .then(response => response.json())
-            .then(data => {
-            //get output data
-                //const output = document.getElementById('id-output');
-                //output.innerHTML = `<img src= "${data}" style="max-width: 50%; height: auto; border-radius: 8px;" />`;
-                //const output = document.getElementById('erm')
-                //#output.innerHTML = `Allocations: ${str(data.allocs)}\nComputations: ${str(data.computations)}\nSymbols: ${str(symbols)}`
-                
-                table_output = '<table><tr><th class=table-label>Stock</th>'
+                .then(response => response.json())
+                .then(data => {
+                    let table_output = '<table><tr><th class="table-label">Stock</th>';
 
-                data.symbols.forEach(sym => {
-                    table_output += `<th class='table-rest'>${sym}</th>`
-                })
+                    data.symbols.forEach(sym => {
+                        table_output += `<th class="table-rest">${sym}</th>`;
+                    });
 
-                table_output += '</tr><tr><td class=table-label>Optimized Allocation</td>'
-                data.allocs.forEach(alloc => {
-                    table_output += `<td class='table-rest'>${alloc}</td>`
-                })
+                    table_output += '</tr><tr><td class="table-label">Optimized Allocation</td>';
 
-                table_output += '</tr></table>'
-                
-                measurements = ['Cumulative Return', 'Average Daily Return', 'Standard Deviation Daily Return', 'Sharpe Ratio']
-                table_output_results = '<table><tr><th class=table-label>Measurement</th>'
-                measurements.forEach(sym => {
-                    table_output_results += `<th class='table-rest'>${sym}</th>`
-                })
-                table_output_results += '</tr><tr><td class=table-label>Results</td>'
-                data.computations.forEach(result => {
-                    table_output_results += `<td class=table-rest>${result}</td>`
-                })
+                    data.allocs.forEach(alloc => {
+                        table_output += `<td class="table-rest">${alloc}</td>`;
+                    });
 
-                table_output_results += '</tr></table>'
+                    table_output += '</tr></table>';
 
-                // Turn on (add class)
-                header_id = document.getElementById('special-header')
-                header_id.classList.add('header-highlight');
+                    const measurements = [
+                        'Cumulative Return',
+                        'Average Daily Return',
+                        'Standard Deviation Daily Return',
+                        'Sharpe Ratio'
+                    ];
 
-                // Edit button
-                button = document.getElementById('action-button')
-                button.textContent = 'Randomize again!'
+                    let table_output_results = '<table><tr><th class="table-label">Measurement</th>';
 
-                const result_output = document.getElementById('result_output')
-                result_output.innerHTML = table_output + table_output_results
-                const image_output = document.getElementById('image_output')
-                image_output.innerHTML = `<img src= "${data.image}" style="max-width: 100%; height: auto; border-radius:12px;" />`
-            })
+                    measurements.forEach(metric => {
+                        table_output_results += `<th class="table-rest">${metric}</th>`;
+                    });
+
+                    table_output_results += '</tr><tr><td class="table-label">Results</td>';
+
+                    data.computations.forEach(result => {
+                        table_output_results += `<td class="table-rest">${result}</td>`;
+                    });
+
+                    table_output_results += '</tr></table>';
+
+                    const header_id = document.getElementById('special-header');
+                    header_id.classList.add('header-highlight');
+
+                    const button = document.getElementById('action-button');
+                    button.textContent = 'Randomize again!';
+
+                    const result_output = document.getElementById('result_output');
+                    result_output.innerHTML = table_output + table_output_results;
+
+                    const image_output = document.getElementById('image_output');
+                    image_output.innerHTML = `<img src="${data.image}" style="max-width: 100%; height: auto;" />`;
+                });
         }
     </script>
 </body>
